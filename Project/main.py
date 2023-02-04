@@ -4,13 +4,16 @@
 
 import car_sales.car_sales as cs
 
+def print_dictionary_values(dictionary: dict):
+    for key, value in dictionary.items():
+        print(f"\n\n{key}:\n\n{value}\n\n")
+
 def print_aggregate_value_result(aggregate_values):
     if aggregate_values:
         for dictionary in aggregate_values:
-            for key, value in dictionary.items():
+            for key in dictionary.keys():
                 for calculations in dictionary[key]:
-                    for key, value in calculations.items():
-                        print(f"\n\n{key}:\n\n{value}\n\n")
+                    print_dictionary_values(calculations)
 
 def main():
     car_sales = cs.CarSales()

@@ -47,8 +47,11 @@ class CarSales():
             {"mean": self.car_sales_df.groupby([column]).mean(numeric_only=True)},
             {"median": self.car_sales_df.groupby([column]).median(numeric_only=True)},
             {"mode": self.car_sales_df.groupby([column]).agg(lambda x: x.value_counts().index[0])},
-            {"sum": self.car_sales_df.groupby([column]).sum(numeric_only=True)},
+            {"sum": self.car_sales_df.groupby([column])[self.get_non_id_columns()].sum(numeric_only=True)},
             ]} for column in self.car_sales_df.columns if "ID" in str(column)]
+    
+    def get_non_id_columns(self):
+        return [column for column in self.car_sales_df.columns if "ID" not in str(column)]
     
     def get_df_without_id_columns(self):
         id_columns = [column for column in self.car_sales_df.columns if "ID" in str(column)]
