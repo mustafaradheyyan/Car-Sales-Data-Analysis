@@ -70,7 +70,17 @@ class CarSales():
         return {color_sales_by_cost_df.index[0]: color_sales_by_cost_df.iloc[0]}
     
     def most_common_color_per_vehicle_type(self):
-        return self.car_sales_df.groupby(["VehicleType","ColorID"]).size()
+        # car_sales_vehicle_type_color_count = self.car_sales_df.groupby(["VehicleType","ColorID"]).agg(lambda x: x.value_counts().index[0])
+        # car_sales_vehicle_type_color_count = self.car_sales_df.groupby(["VehicleType","ColorID"]).size()#.to_frame()#.max()#sort_values(ascending=False)
+        print(self.car_sales_df.groupby(["VehicleType","ColorID"]).size())
+        # car_sales_vehicle_type_color_count = self.car_sales_df.groupby(["VehicleType","ColorID"]).size().groupby(level=1).max()
+        # car_sales_vehicle_type_color_count = self.car_sales_df.groupby(["VehicleType","ColorID"]).size().reset_index().groupby(["VehicleType","ColorID"]).max()
+        car_sales_vehicle_type_color_count = self.car_sales_df.groupby(["VehicleType","ColorID"]).size().sort_values(ascending=False).reset_index(name="count").drop_duplicates(subset='VehicleType')
+        
+        #print(car_sales_vehicle_type_color_count.query('VehicleType = "Convertible"' and 'ColorID = 5'))
+        #print(car_sales_vehicle_type_color_count["VehicleType"] == "Convertible" &&)
+        #car_sales_vehicle_type_color_count.info()
+        return car_sales_vehicle_type_color_count
     
     def get_cost_columns(self):
         return [column for column in self.car_sales_df.columns if self.car_sales_df[column].dtype in NUMERICAL_DTYPES and "ID" not in str(column) and "Mileage" not in str(column)]
