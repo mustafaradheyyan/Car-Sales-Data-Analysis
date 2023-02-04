@@ -50,6 +50,31 @@ class CarSales():
             {"sum": self.car_sales_df.groupby([column])[self.get_non_id_columns()].sum(numeric_only=True)},
             ]} for column in self.car_sales_df.columns if "ID" in str(column)]
     
+    def group_by_color_id(self):
+        column = "ColorID"
+        return [{column: [
+            {"min": self.car_sales_df.groupby([column])[self.get_non_id_columns()].min(numeric_only=True)},
+            {"max": self.car_sales_df.groupby([column])[self.get_non_id_columns()].max(numeric_only=True)},
+            {"mean": self.car_sales_df.groupby([column])[self.get_non_id_columns()].mean(numeric_only=True)},
+            {"median": self.car_sales_df.groupby([column])[self.get_non_id_columns()].median(numeric_only=True)},
+            {"mode": self.car_sales_df.groupby([column])[self.get_non_id_columns()].agg(lambda x: x.value_counts().index[0])},
+            {"sum": self.car_sales_df.groupby([column])[self.get_non_id_columns()].sum(numeric_only=True)},
+            ]}]
+    
+    def lowest_avg_cost_color(self):
+        color_sales_by_cost_df = self.car_sales_df.groupby(["ColorID"])[self.get_cost_columns()].mean(numeric_only=True).sum(axis=1).sort_values()
+        return {color_sales_by_cost_df.index[0]: color_sales_by_cost_df.iloc[0]}
+    
+    def highest_avg_cost_color(self):
+        color_sales_by_cost_df = self.car_sales_df.groupby(["ColorID"])[self.get_cost_columns()].mean(numeric_only=True).sum(axis=1).sort_values(ascending=False)
+        return {color_sales_by_cost_df.index[0]: color_sales_by_cost_df.iloc[0]}
+    
+    def most_common_color_per_vehicle_type(self):
+        return self.car_sales_df.groupby(["VehicleType","ColorID"]).size()
+    
+    def get_cost_columns(self):
+        return [column for column in self.car_sales_df.columns if self.car_sales_df[column].dtype in NUMERICAL_DTYPES and "ID" not in str(column) and "Mileage" not in str(column)]
+    
     def get_non_id_columns(self):
         return [column for column in self.car_sales_df.columns if "ID" not in str(column)]
     
