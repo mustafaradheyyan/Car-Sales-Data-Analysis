@@ -2,7 +2,7 @@ import pandas as pd
 from pathlib import Path
 from data_cleaner.data_cleaner import DataCleaner
 
-DASH_SEPARATOR = "\n" + ("-" * (178 * 2)) + "\n"
+DASH_SEPARATOR = "\n" + ("-" * 50)
 NUMERICAL_DTYPES = ["int64", "float"]
 
 class CarSales():
@@ -77,6 +77,14 @@ class CarSales():
         car_sales_vehicle_type_color_count = self.car_sales_df.groupby(["VehicleType","ColorID"]).size().sort_values(ascending=False).reset_index(name="count").drop_duplicates(subset='VehicleType')
         return dict(zip(car_sales_vehicle_type_color_count["VehicleType"], car_sales_vehicle_type_color_count["ColorID"]))
     
+    def most_common_color_per_vehicle_make(self):
+        car_sales_vehicle_type_color_count = self.car_sales_df.groupby(["Make","ColorID"]).size().sort_values(ascending=False).reset_index(name="count").drop_duplicates(subset='Make')
+        return dict(zip(car_sales_vehicle_type_color_count["Make"], car_sales_vehicle_type_color_count["ColorID"]))
+    
+    def most_common_color_per_category(self, category):
+        car_sales_vehicle_type_color_count = self.car_sales_df.groupby([category,"ColorID"]).size().sort_values(ascending=False).reset_index(name="count").drop_duplicates(subset=category)
+        return dict(zip(car_sales_vehicle_type_color_count[category], car_sales_vehicle_type_color_count["ColorID"]))
+    
     def get_cost_columns(self):
         return [column for column in self.car_sales_df.columns if self.car_sales_df[column].dtype in NUMERICAL_DTYPES and "ID" not in str(column) and "Mileage" not in str(column)]
     
@@ -115,23 +123,23 @@ class CarSales():
     def min_cost_and_min_mileage(self, cost_of_car, mileage_of_car):
         car_sales_df_cost = self.combine_cost_columns()
         car_sales_cost_vs_mileage = car_sales_df_cost.loc[(car_sales_df_cost["Cost"] >= cost_of_car) & (car_sales_df_cost["Mileage"] >= mileage_of_car)]
-        return {"StockID": car_sales_cost_vs_mileage["StockID"].values}
+        return {"StockID": car_sales_cost_vs_mileage["StockID"].values.tolist()}
     
     def max_cost_and_max_mileage(self, cost_of_car, mileage_of_car):
         car_sales_df_cost = self.combine_cost_columns()
         car_sales_cost_vs_mileage = car_sales_df_cost.loc[(car_sales_df_cost["Cost"] <= cost_of_car) & (car_sales_df_cost["Mileage"] <= mileage_of_car)]
-        return {"StockID": car_sales_cost_vs_mileage["StockID"].values}
+        return {"StockID": car_sales_cost_vs_mileage["StockID"].values.tolist()}
         
     def get_custom_query(self): pass
     def get_custom_query(self): pass
     def get_custom_query(self): pass
     
-    def revenue_by_make(self):
+    def total_revenue_by_make(self):
         car_sales_df_cost = self.combine_cost_columns()
         car_sales_revenue_make = car_sales_df_cost.groupby(["Make"])["Cost"].sum().sort_values(ascending=False).reset_index(name="TotalRevenue")
         return dict(zip(car_sales_revenue_make["Make"], car_sales_revenue_make["TotalRevenue"]))
         
-    def cost_per_miles(self):
+    def cost_per_mile(self):
         car_sales_df_cost = self.combine_cost_columns()
         return round((car_sales_df_cost["Cost"] / car_sales_df_cost["Mileage"]).mean(), 3)
     
