@@ -12,7 +12,55 @@ def persist_dataset(df):
     except ValueError:
         print("Database already exists!")
 
-def prep_qry(args, colnames):
+def add_data(attributes):
+    user_data = tuple(input(f"Enter input for {attribute}: ") for attribute in attributes)
+    query, data = prep_insert_qry(user_data, attributes)
+
+    with conn:
+        conn.execute(query, data)
+
+def update_data(attributes):
+    # while(True):
+    #     attribute = input(f"What attribute do you want to change? ({list(attributes)})\n")
+    #     if attribute not in attributes:
+    #         print("That attribute is not in the table! Try again from this list:", attributes)
+    #     else:
+    #         break
+        
+    # value = input("What value do you want to set the attribute to? ")
+    # conditional = input("Type in the conditional statement after the WHERE clause: ")
+    
+    # query = f"UPDATE {TABLE_NAME} SET MAKE = ? WHERE MAKE = ?"
+
+    # with conn:
+    #     conn.execute(query, (value, conditional))
+    # conn.commit()
+    
+    while(True):
+        attribute = input(f"What attribute do you want to change? ({list(attributes)})\n")
+        if attribute not in attributes:
+            print("That attribute is not in the table! Try again from this list:", attributes)
+        else:
+            break
+        
+    value = input("What value do you want to set the attribute to? ")
+    conditional = input("Type in the conditional statement after the WHERE clause: ")
+    
+    query = f"UPDATE {TABLE_NAME} SET {attribute} = ? WHERE {conditional}"
+
+    with conn:
+        conn.execute(query, (value,))
+    conn.commit()
+
+def read_data():
+    for row in conn.execute(f"SELECT * FROM {TABLE_NAME}"): print(row)
+    
+def delete_data(): pass
+
+def close_connection():
+    conn.close()
+
+def prep_insert_qry(args, colnames):
     """ source: https://stackoverflow.com/a/70745278
     this query is secure as long as `colnames` contains trusted data
     standard parametrized query mechanism secures `args`
@@ -38,37 +86,3 @@ def prep_qry(args, colnames):
     qry = " ".join(parts)
 
     return qry, tuple([v for v in args if not v is None])
-
-def add_data(attributes):
-    user_data = tuple(input(f"Enter input for {attribute}: ") for attribute in attributes)
-    query, data = prep_qry(user_data, attributes)
-
-    with conn:
-        conn.execute(query, data)
-
-def update_data(): pass
-
-def read_data(): pass
-
-def delete_data(): pass
-
-def close_connection():
-    conn.close()
-
-# with conn:
-#     conn.execute("""CREATE TABLE IF NOT EXISTS dogs (
-#         dog_id INTEGER PRIMARY KEY,
-#         dog_name TEXT,
-#         breed TEXT
-#     )""")
-
-# with conn:
-#     conn.execute("INSERT INTO dogs(dog_name, breed) VALUES ('Lunar','Labs')")
-
-# # for row in conn.execute("SELECT * FROM dogs"):
-# #     print(row)
-
-# with conn:
-#     query_result_list = [row for row in conn.execute("SELECT * FROM dogs")]
-#     query_result_list = conn.execute("SELECT * FROM dogs")
-#     print(query_result_list)

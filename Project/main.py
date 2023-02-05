@@ -78,7 +78,7 @@ def main():
         elif user_choice == 3:
             dbc.add_data(car_sales.car_sales_columns)
         elif user_choice == 4:
-            dbc.update_data()
+            dbc.update_data(car_sales.car_sales_columns)
         elif user_choice == 5:
             dbc.read_data()
         elif user_choice == 6:
