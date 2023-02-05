@@ -7,6 +7,14 @@ def open_connection():
 def persist_dataset(df):
     df.to_sql("car_sales", conn, if_exists='append')
 
+def add_data(): pass
+
+def update_data(): pass
+
+def read_data(): pass
+
+def delete_data(): pass
+
 def close_connection():
     conn.close()
 
