@@ -110,13 +110,13 @@ class CarSales():
     
     def min_cost_and_min_mileage(self, cost_of_car, mileage_of_car):
         car_sales_df_cost = self.combine_cost_columns()
-        car_sales_cost_vs_mileage = car_sales_df_cost.loc[(car_sales_df_cost["Cost"] >= cost_of_car) & (car_sales_df_cost.Mileage >= mileage_of_car)]
+        car_sales_cost_vs_mileage = car_sales_df_cost.loc[(car_sales_df_cost["Cost"] >= cost_of_car) & (car_sales_df_cost["Mileage"] >= mileage_of_car)]
         print(car_sales_cost_vs_mileage)
         return {"StockID": car_sales_cost_vs_mileage["StockID"].values}
     
     def max_cost_and_max_mileage(self, cost_of_car, mileage_of_car):
         car_sales_df_cost = self.combine_cost_columns()
-        car_sales_cost_vs_mileage = car_sales_df_cost.loc[(car_sales_df_cost["Cost"] <= cost_of_car) & (car_sales_df_cost.Mileage <= mileage_of_car)]
+        car_sales_cost_vs_mileage = car_sales_df_cost.loc[(car_sales_df_cost["Cost"] <= cost_of_car) & (car_sales_df_cost["Mileage"] <= mileage_of_car)]
         print(car_sales_cost_vs_mileage)
         return {"StockID": car_sales_cost_vs_mileage["StockID"].values}
         
@@ -130,7 +130,15 @@ class CarSales():
         print(car_sales_revenue_make)
         return dict(zip(car_sales_revenue_make["Make"], car_sales_revenue_make["TotalRevenue"]))
         
-    def cost_per_miles(self): pass
-    def percent_of_cars_sold_above_mileage(self, mileage): pass
-    def percent_of_cars_sold_below_mileage(self, mileage): pass
-    def percent_of_cars_sold_between_mileage(self, mileage_low, mileage_high): pass
+    def cost_per_miles(self):
+        car_sales_df_cost = self.combine_cost_columns()
+        return round((car_sales_df_cost["Cost"] / car_sales_df_cost["Mileage"]).mean(), 3)
+    
+    def percent_of_cars_sold_above_mileage(self, mileage):
+        return round(((len(self.car_sales_df.loc[(self.car_sales_df["Mileage"] >= mileage)]) / len(self.car_sales_df)) * 100), 3)
+        
+    def percent_of_cars_sold_below_mileage(self, mileage):
+        return round(((len(self.car_sales_df.loc[(self.car_sales_df["Mileage"] <= mileage)]) / len(self.car_sales_df)) * 100), 3)
+    
+    def percent_of_cars_sold_between_mileage(self, mileage_low, mileage_high):
+        return round(((len(self.car_sales_df.loc[(self.car_sales_df["Mileage"] >= mileage_low) & (self.car_sales_df["Mileage"] <= mileage_high)]) / len(self.car_sales_df)) * 100), 3)
