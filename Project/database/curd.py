@@ -34,12 +34,17 @@ def update_data(attributes):
 
     with conn:
         conn.execute(query, (value,))
-    conn.commit()
 
 def read_data():
     for row in conn.execute(f"SELECT * FROM {TABLE_NAME}"): print(row)
     
-def delete_data(): pass
+def delete_data(attributes):
+    conditional = input(f"Type in the conditional statement after the WHERE clause (column names: {list(attributes)}):\n")
+    
+    query = f"DELETE FROM {TABLE_NAME} WHERE {conditional}"
+
+    with conn:
+        conn.execute(query)
 
 def close_connection():
     conn.close()

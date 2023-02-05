@@ -82,7 +82,7 @@ def main():
         elif user_choice == 5:
             dbc.read_data()
         elif user_choice == 6:
-            dbc.delete_data()
+            dbc.delete_data(car_sales.car_sales_columns)
         else:
             break
 
