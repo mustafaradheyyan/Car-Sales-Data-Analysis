@@ -13,11 +13,16 @@ class CarSales():
         """Read csv and set StockID as the index column (checked to be unique key)
         """
         self._car_sales_df = pd.read_csv(self.car_sales_file_path, index_col="StockID")
+        self._car_sales_columns = self._car_sales_df.columns
         self.car_sales_single_values = []
     
     @property
     def car_sales_df(self):
         return self._car_sales_df
+    
+    @property
+    def car_sales_columns(self):
+        return self._car_sales_columns
     
     def clean_data(self):
         """
