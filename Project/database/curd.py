@@ -13,8 +13,10 @@ def persist_dataset(df):
         print("Database already exists!")
 
 def prep_qry(args, colnames):
-    """this query is secure as long as `colnames` contains trusted data
-    standard parametrized query mechanism secures `args`"""
+    """ source: https://stackoverflow.com/a/70745278
+    this query is secure as long as `colnames` contains trusted data
+    standard parametrized query mechanism secures `args`
+    """
 
     binds,use = [],[]
 
@@ -39,23 +41,10 @@ def prep_qry(args, colnames):
 
 def add_data(attributes):
     user_data = tuple(input(f"Enter input for {attribute}: ") for attribute in attributes)
-    
-    # print(prep_qry([1,None,3], attributes))
-    # print(prep_qry(user_data, attributes))
-    #print(str(prep_qry(user_data, attributes)))
     query, data = prep_qry(user_data, attributes)
-    print(query, data)
-    
+
     with conn:
         conn.execute(query, data)
-    
-    # print(user_data)
-    # print(tuple(attributes))
-    # query = "INSERT INTO car_sales (%s) VALUES (?)" % tuple(attributes)
-    # # with conn: conn.execute(query, user_data)
-    # with conn:
-    #     conn.execute(query, user_data)
-    #     # conn.execute("INSERT INTO car_sales (Make,Model,ColorID,VehicleType,CostPrice,SpareParts,LaborCost,Registration_Date,Mileage,PurchaseDate) VALUES (?,?,?,?,?,?,?,?,?,?)", user_data)
 
 def update_data(): pass
 
