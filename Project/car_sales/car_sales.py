@@ -191,6 +191,7 @@ class CarSales():
     def cost_per_mile_of_mileage(self):
         """
         Uses a combined cost car sales table, a table with combined cost columns into one "Cost" column, and divides the "Cost" column
+        by the "Mileage" column
         """
         car_sales_df_cost = self.combine_cost_columns()
         return round((car_sales_df_cost["Cost"] / car_sales_df_cost["Mileage"]).mean(), 2)
