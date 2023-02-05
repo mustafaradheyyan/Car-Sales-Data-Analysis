@@ -20,22 +20,6 @@ def add_data(attributes):
         conn.execute(query, data)
 
 def update_data(attributes):
-    # while(True):
-    #     attribute = input(f"What attribute do you want to change? ({list(attributes)})\n")
-    #     if attribute not in attributes:
-    #         print("That attribute is not in the table! Try again from this list:", attributes)
-    #     else:
-    #         break
-        
-    # value = input("What value do you want to set the attribute to? ")
-    # conditional = input("Type in the conditional statement after the WHERE clause: ")
-    
-    # query = f"UPDATE {TABLE_NAME} SET MAKE = ? WHERE MAKE = ?"
-
-    # with conn:
-    #     conn.execute(query, (value, conditional))
-    # conn.commit()
-    
     while(True):
         attribute = input(f"What attribute do you want to change? ({list(attributes)})\n")
         if attribute not in attributes:
