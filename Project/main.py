@@ -19,6 +19,13 @@ def main():
     car_sales = cs.CarSales()
     car_sales.clean_data()
 
+## Post-Cleaning Data Exploration
+    # car_sales.print_data()
+    # car_sales.print_data_snippet()
+    # car_sales.print_data_types()
+    # print_aggregate_value_result(car_sales.get_aggregate_color_id())
+    # print_aggregate_value_result(car_sales.get_aggregate_non_int_columns())
+
     print(car_sales.get_min_values(), cs.DASH_SEPARATOR)
     print(car_sales.get_max_values(), cs.DASH_SEPARATOR)
     print(car_sales.lowest_avg_cost_color(), cs.DASH_SEPARATOR)
@@ -29,26 +36,12 @@ def main():
     print(car_sales.min_cost_and_min_mileage(100000, 100000), cs.DASH_SEPARATOR)
     print(car_sales.max_cost_and_max_mileage(20000, 50000), cs.DASH_SEPARATOR)
     print(car_sales.total_revenue_by_make(), cs.DASH_SEPARATOR)
-    print(car_sales.cost_per_mile(), cs.DASH_SEPARATOR)
+    print(car_sales.cost_per_mile_of_mileage(), cs.DASH_SEPARATOR)
     print(car_sales.percent_of_cars_sold_above_mileage(100000), cs.DASH_SEPARATOR)
     print(car_sales.percent_of_cars_sold_below_mileage(100000), cs.DASH_SEPARATOR)
     print(car_sales.percent_of_cars_sold_between_mileage(50000, 100000), cs.DASH_SEPARATOR)
     
-    # car_sales.get_custom_query()
-    # car_sales.get_custom_query()
-
 if __name__ == "__main__":
     main()
     
-    
-    # car_sales.print_data()
-    # car_sales.print_data_snippet()
-    # car_sales.print_data_types()
-    # print_aggregate_value_result(car_sales.group_by_id())
-    # print_aggregate_value_result(car_sales.group_by_color_id())
-    # car_sales.get_aggregate_values()
-    # print_aggregate_value_result(car_sales.get_aggregate_values())
     # car_sales.get_boolean_values()
-    # car_sales.get_boolean_values()
-    # print(car_sales.sort_by_purchase_date())
-    # car_sales.get_custom_query()
