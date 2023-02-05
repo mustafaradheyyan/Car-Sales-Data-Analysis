@@ -2,3 +2,6 @@ Project/car_sales/__pycache__/__init__.cpython-310.pyc
 Project/car_sales/__pycache__/car_sales.cpython-310.pyc
 Project/data_cleaner/__pycache__/__init__.cpython-310.pyc
 Project/data_cleaner/__pycache__/data_cleaner.cpython-310.pyc
+Project/database/__pycache__/__init__.cpython-310.pyc
+Project/database/__pycache__/curd.cpython-310.pyc
+Project/database/car_sales.db
