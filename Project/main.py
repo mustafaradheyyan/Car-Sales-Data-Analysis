@@ -11,16 +11,13 @@ def get_user_input() -> int:
     while(True):
         try:
             user_choice = int(input("""
-                            What do you want to do?
-                            
+                            What do you want to do? (type 0-6, followed by enter)\n
                             0) Quit the Program
-                            1) View Post Cleaning Data Exploration
-                            2) View Data Queries
-                            3) Add Data to Car Sales Database Table
-                            4) Update Data from Car Sales Database Table
-                            5) Read Data from Car Sales Database Table
-                            6) Delete Data from Car Sales Database Table
                             
+         Car Sales Dataset  1) Exploration 2) Queries
+                            
+         Car Sales Database 3) CREATE      4) UPDATE
+                            5) READ        6) DELETE\n
                             """))
         except ValueError:
             print(RETRY_STRING)
