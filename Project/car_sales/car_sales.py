@@ -1,3 +1,8 @@
+## Author: Mustafa Radheyyan
+## Date: 02/02/2023
+## Assignment: Cognixia JUMPro Python Project 3 - Queries
+
+import copy
 import pandas as pd
 from pathlib import Path
 from data_cleaner.data_cleaner import DataCleaner
@@ -13,16 +18,16 @@ class CarSales():
         """Read csv and set StockID as the index column (checked to be unique key)
         """
         self._car_sales_df = pd.read_csv(self.car_sales_file_path, index_col="StockID")
-        self._car_sales_columns = self._car_sales_df.columns
+        self._car_sales_columns_list = list(self._car_sales_df.columns)
         self.car_sales_single_values = []
     
     @property
     def car_sales_df(self):
-        return self._car_sales_df
+        return copy.deepcopy(self._car_sales_df)
     
     @property
-    def car_sales_columns(self):
-        return self._car_sales_columns
+    def car_sales_columns_list(self):
+        return copy.deepcopy(self._car_sales_columns_list)
     
     def clean_data(self):
         """

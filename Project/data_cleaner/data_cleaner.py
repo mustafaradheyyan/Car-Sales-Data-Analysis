@@ -1,3 +1,7 @@
+## Author: Mustafa Radheyyan
+## Date: 02/02/2023
+## Assignment: Cognixia JUMPro Python Project 3 - Queries
+
 import pandas as pd
 
 class DataCleaner():

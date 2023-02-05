@@ -1,6 +1,11 @@
+## Author: Mustafa Radheyyan
+## Date: 02/02/2023
+## Assignment: Cognixia JUMPro Python Project 3 - Queries
+
 import sqlite3
 
 TABLE_NAME = "car_sales"
+PRIMARY_KEY = "StockID"
 
 def open_connection():
     global conn
@@ -8,46 +13,46 @@ def open_connection():
 
 def persist_dataset(df):
     try:
-        df.to_sql(TABLE_NAME, conn, if_exists='fail', index=False)
+        df.to_sql(TABLE_NAME, conn, if_exists='fail')
     except ValueError:
         print("Database already exists!")
 
-def add_data(attributes):
-    user_data = tuple(input(f"Enter input for {attribute}: ") for attribute in attributes)
+def get_primary_key():
+    query = f"SELECT MAX({PRIMARY_KEY}) FROM {TABLE_NAME}"
+    return conn.execute(query).fetchone()[0]
+
+def add_data(attributes: list):
+    user_data = [input(f"Enter input for {attribute}: ") for attribute in attributes]
+    user_data.append(int(get_primary_key() + 1))
+    attributes.append(PRIMARY_KEY)
+    
     query, data = prep_insert_qry(user_data, attributes)
+    with conn: conn.execute(query, data)
 
-    with conn:
-        conn.execute(query, data)
-
-def update_data(attributes):
+def update_data(attributes: list):
     while(True):
-        attribute = input(f"What attribute do you want to change? ({list(attributes)})\n")
+        attribute = input(f"What attribute do you want to change? Choose from this list: ({attributes})\n")
         if attribute not in attributes:
-            print("That attribute is not in the table! Try again from this list:", attributes)
-        else:
-            break
-        
+            print("That attribute is not in the table!")
+        else: break
     value = input("What value do you want to set the attribute to? ")
     conditional = input("Type in the conditional statement after the WHERE clause: ")
     
     query = f"UPDATE {TABLE_NAME} SET {attribute} = ? WHERE {conditional}"
-
-    with conn:
-        conn.execute(query, (value,))
+    with conn: conn.execute(query, (value,))
 
 def read_data():
     for row in conn.execute(f"SELECT * FROM {TABLE_NAME}"): print(row)
     
-def delete_data(attributes):
-    conditional = input(f"Type in the conditional statement after the WHERE clause (column names: {list(attributes)}):\n")
-    
-    query = f"DELETE FROM {TABLE_NAME} WHERE {conditional}"
-
-    with conn:
-        conn.execute(query)
-
-def close_connection():
-    conn.close()
+def delete_data():
+    while(True):
+        try:
+            sale_id = int(input(f"Type in the StockID of the vehicle sale that you want to delete:\n"))
+        except ValueError:
+            print("That is not an integer!")
+        else: break
+    query = f"DELETE FROM {TABLE_NAME} WHERE StockID = ?"
+    with conn: conn.execute(query, (sale_id,))
 
 def prep_insert_qry(args, colnames):
     """ source: https://stackoverflow.com/a/70745278
@@ -75,3 +80,6 @@ def prep_insert_qry(args, colnames):
     qry = " ".join(parts)
 
     return qry, tuple([v for v in args if not v is None])
+
+def close_connection():
+    conn.close()

@@ -76,13 +76,13 @@ def main():
         elif user_choice == 2:
             queries(car_sales)
         elif user_choice == 3:
-            dbc.add_data(car_sales.car_sales_columns)
+            dbc.add_data(car_sales.car_sales_columns_list)
         elif user_choice == 4:
-            dbc.update_data(car_sales.car_sales_columns)
+            dbc.update_data(car_sales.car_sales_columns_list)
         elif user_choice == 5:
             dbc.read_data()
         elif user_choice == 6:
-            dbc.delete_data(car_sales.car_sales_columns)
+            dbc.delete_data()
         else:
             break
 
