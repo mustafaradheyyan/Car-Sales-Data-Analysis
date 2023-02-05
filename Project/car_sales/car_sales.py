@@ -191,16 +191,31 @@ class CarSales():
     def cost_per_mile_of_mileage(self):
         """
         Uses a combined cost car sales table, a table with combined cost columns into one "Cost" column, and divides the "Cost" column
-        by the "Mileage" column
+        by the "Mileage" column. The mean of this result is then calculated, and the result is rounded to 2 decimal places.
         """
         car_sales_df_cost = self.combine_cost_columns()
         return round((car_sales_df_cost["Cost"] / car_sales_df_cost["Mileage"]).mean(), 2)
     
     def percent_of_cars_sold_above_mileage(self, mileage):
-        return round(((len(self.car_sales_df.loc[(self.car_sales_df["Mileage"] >= mileage)]) / len(self.car_sales_df)) * 100), 2)
+        """
+        Returns the rows of the car sales DataFrame where the mileage is greater than the mileage argument,
+        and divides the number of rows by the total number of rows in the original DataFrame. Then, the result
+        is multiplied by 100 and rounded to 2 decimal places in order to return a rounded percentage.
+        """
+        return round(((len(self.car_sales_df.loc[(self.car_sales_df["Mileage"] > mileage)]) / len(self.car_sales_df)) * 100), 2)
         
     def percent_of_cars_sold_below_mileage(self, mileage):
-        return round(((len(self.car_sales_df.loc[(self.car_sales_df["Mileage"] <= mileage)]) / len(self.car_sales_df)) * 100), 2)
+        """
+        Returns the rows of the car sales DataFrame where the mileage is less than the mileage argument,
+        and divides the number of rows by the total number of rows in the original DataFrame. Then, the result
+        is multiplied by 100 and rounded to 2 decimal places in order to return a rounded percentage.
+        """
+        return round(((len(self.car_sales_df.loc[(self.car_sales_df["Mileage"] < mileage)]) / len(self.car_sales_df)) * 100), 2)
     
     def percent_of_cars_sold_between_mileage(self, mileage_low, mileage_high):
+        """
+        Returns the rows of the car sales DataFrame where the mileage is between the range of the mileage arguments,
+        and divides the number of rows by the total number of rows in the original DataFrame. Then, the result
+        is multiplied by 100 and rounded to 2 decimal places in order to return a rounded percentage.
+        """
         return round(((len(self.car_sales_df.loc[(self.car_sales_df["Mileage"] >= mileage_low) & (self.car_sales_df["Mileage"] <= mileage_high)]) / len(self.car_sales_df)) * 100), 2)
