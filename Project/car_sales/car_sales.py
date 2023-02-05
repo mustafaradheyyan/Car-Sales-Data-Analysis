@@ -19,7 +19,7 @@ class CarSales():
         """
         - Drop any rows which have a null value in the "CostPrice" column
         - Convert columns with "Date" in name to the datetime data type
-        - Change British English spelling to American English spelling
+        - Change British English spelling to American English spelling (Saloon to Sedan)
         - Remove columns with only one value and save it to an object variable
         - Print columns removed, if any
         """

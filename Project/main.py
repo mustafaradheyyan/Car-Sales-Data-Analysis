@@ -8,12 +8,13 @@ def print_dictionary_values(dictionary: dict):
     for key, value in dictionary.items():
         print(f"\n\n{key}:\n\n{value}\n\n")
 
-def print_aggregate_value_result(aggregate_values):
+def print_aggregate_value_result(aggregate_values, *args):
     if aggregate_values:
         for dictionary in aggregate_values:
             for key in dictionary.keys():
                 for calculations in dictionary[key]:
                     print_dictionary_values(calculations)
+    print(*args)
 
 def main():
     car_sales = cs.CarSales()
@@ -23,9 +24,10 @@ def main():
     # car_sales.print_data()
     # car_sales.print_data_snippet()
     # car_sales.print_data_types()
-    # print_aggregate_value_result(car_sales.get_aggregate_color_id())
-    # print_aggregate_value_result(car_sales.get_aggregate_non_int_columns())
+    # print_aggregate_value_result(car_sales.get_aggregate_color_id(), cs.DASH_SEPARATOR)
+    # print_aggregate_value_result(car_sales.get_aggregate_non_int_columns(), cs.DASH_SEPARATOR)
 
+## Queries
     print(car_sales.get_min_values(), cs.DASH_SEPARATOR)
     print(car_sales.get_max_values(), cs.DASH_SEPARATOR)
     print(car_sales.lowest_avg_cost_color(), cs.DASH_SEPARATOR)
