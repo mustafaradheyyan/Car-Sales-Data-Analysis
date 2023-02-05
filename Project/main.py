@@ -35,8 +35,15 @@ def main():
     # car_sales.get_boolean_values()
     # print(car_sales.sort_by_purchase_date())
     # car_sales.get_custom_query()
-    print(car_sales.min_cost_and_min_mileage(100000, 100000))
-    print(car_sales.max_cost_and_max_mileage(20000, 50000))
+    # print(car_sales.min_cost_and_min_mileage(100000, 100000))
+    # print(car_sales.max_cost_and_max_mileage(20000, 50000))
+    
+    print(car_sales.revenue_by_make())
+    # print(car_sales.cost_per_miles())
+    # print(car_sales.percent_of_cars_sold_above_mileage(100000))
+    # print(car_sales.percent_of_cars_sold_below_mileage(100000))
+    # print(car_sales.percent_of_cars_sold_between_mileage(50000, 100000))
+    
     # car_sales.get_custom_query()
     # car_sales.get_custom_query()
 

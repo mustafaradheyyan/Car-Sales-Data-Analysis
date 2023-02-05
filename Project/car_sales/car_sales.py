@@ -71,7 +71,7 @@ class CarSales():
     
     def most_common_color_per_vehicle_type(self):
         car_sales_vehicle_type_color_count = self.car_sales_df.groupby(["VehicleType","ColorID"]).size().sort_values(ascending=False).reset_index(name="count").drop_duplicates(subset='VehicleType')
-        return dict(zip(car_sales_vehicle_type_color_count.VehicleType, car_sales_vehicle_type_color_count.ColorID))
+        return dict(zip(car_sales_vehicle_type_color_count["VehicleType"], car_sales_vehicle_type_color_count["ColorID"]))
     
     def get_cost_columns(self):
         return [column for column in self.car_sales_df.columns if self.car_sales_df[column].dtype in NUMERICAL_DTYPES and "ID" not in str(column) and "Mileage" not in str(column)]
@@ -123,3 +123,14 @@ class CarSales():
     def get_custom_query(self): pass
     def get_custom_query(self): pass
     def get_custom_query(self): pass
+    
+    def revenue_by_make(self):
+        car_sales_df_cost = self.combine_cost_columns()
+        car_sales_revenue_make = car_sales_df_cost.groupby(["Make"])["Cost"].sum().sort_values(ascending=False).reset_index(name="TotalRevenue")
+        print(car_sales_revenue_make)
+        return dict(zip(car_sales_revenue_make["Make"], car_sales_revenue_make["TotalRevenue"]))
+        
+    def cost_per_miles(self): pass
+    def percent_of_cars_sold_above_mileage(self, mileage): pass
+    def percent_of_cars_sold_below_mileage(self, mileage): pass
+    def percent_of_cars_sold_between_mileage(self, mileage_low, mileage_high): pass
