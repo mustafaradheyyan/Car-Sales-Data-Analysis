@@ -39,7 +39,10 @@ def update_data(attributes: list):
     conditional = input("Type in the conditional statement after the WHERE clause: ")
     
     query = f"UPDATE {TABLE_NAME} SET {attribute} = ? WHERE {conditional}"
-    with conn: conn.execute(query, (value,))
+    try:
+        with conn: conn.execute(query, (value,))
+    except Exception as e:
+        print(e)
 
 def read_data():
     for row in conn.execute(f"SELECT * FROM {TABLE_NAME}"): print(row)
