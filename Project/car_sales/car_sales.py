@@ -7,11 +7,11 @@ NUMERICAL_DTYPES = ["int64", "float"]
 
 class CarSales():
     car_sales_file_path = Path("car_sales/car_sales_table.csv")
-    car_sales_df = pd.read_csv(car_sales_file_path)
-    car_sales_single_values = []
+    data_cleaner = DataCleaner()
     
     def __init__(self):
-        self.data_cleaner = DataCleaner()
+        self.car_sales_df = pd.read_csv(self.car_sales_file_path)
+        self.car_sales_single_values = []
         
     def print_data(self): print(f"Car Sales Table!{DASH_SEPARATOR}{self.car_sales_df}")
     
@@ -98,6 +98,28 @@ class CarSales():
     # def get_aggregate_values(self): pass
     def get_boolean_values(self): pass
     def get_boolean_values(self): pass
+    
+    def combine_cost_columns(self):
+        cost_columns = self.get_cost_columns()
+        car_sales_df_copy = self.car_sales_df.copy()
+        car_sales_df_copy.drop(columns=cost_columns, inplace=True)
+        car_sales_df_copy["Cost"] = 0
+        for column in cost_columns:
+            car_sales_df_copy["Cost"] += self.car_sales_df[column]
+        return car_sales_df_copy
+    
+    def min_cost_and_min_mileage(self, cost_of_car, mileage_of_car):
+        car_sales_df_cost = self.combine_cost_columns()
+        car_sales_cost_vs_mileage = car_sales_df_cost.loc[(car_sales_df_cost["Cost"] >= cost_of_car) & (car_sales_df_cost.Mileage >= mileage_of_car)]
+        print(car_sales_cost_vs_mileage)
+        return {"StockID": car_sales_cost_vs_mileage["StockID"].values}
+    
+    def max_cost_and_max_mileage(self, cost_of_car, mileage_of_car):
+        car_sales_df_cost = self.combine_cost_columns()
+        car_sales_cost_vs_mileage = car_sales_df_cost.loc[(car_sales_df_cost["Cost"] <= cost_of_car) & (car_sales_df_cost.Mileage <= mileage_of_car)]
+        print(car_sales_cost_vs_mileage)
+        return {"StockID": car_sales_cost_vs_mileage["StockID"].values}
+        
     def get_custom_query(self): pass
     def get_custom_query(self): pass
     def get_custom_query(self): pass
