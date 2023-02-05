@@ -48,7 +48,7 @@ def post_cleaning_data_exploration(car_sales: cs.CarSales):
     print_aggregate_value_result(car_sales.get_aggregate_non_int_columns(), cs.DASH_SEPARATOR)
 
 def queries(car_sales: cs.CarSales):
-    print(cs.DASH_SEPARATOR, "\nMinimum numerical values:", car_sales.get_min_values(), cs.DASH_SEPARATOR)
+    print("Minimum numerical values:", car_sales.get_min_values(), cs.DASH_SEPARATOR)
     print("Maximum numerical values:", car_sales.get_max_values(), cs.DASH_SEPARATOR)
     print("Lowest average cost color ID:", car_sales.lowest_avg_cost_color(), cs.DASH_SEPARATOR)
     print("Highest average cost color ID:", car_sales.highest_avg_cost_color(), cs.DASH_SEPARATOR)
@@ -70,6 +70,7 @@ def main():
     
     while(True):
         user_choice = get_user_input()
+        print(cs.DASH_SEPARATOR)
         
         if user_choice == 1:
             post_cleaning_data_exploration(car_sales)
