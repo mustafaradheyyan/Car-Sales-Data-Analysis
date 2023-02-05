@@ -12,7 +12,22 @@ class CarSales():
     def __init__(self):
         self.car_sales_df = pd.read_csv(self.car_sales_file_path, index_col="StockID")
         self.car_sales_single_values = []
-        
+    
+    def clean_data(self):
+        self.data_cleaner.drop_null_rows(self.car_sales_df, ["CostPrice"])
+        self.data_cleaner.convert_columns_to_date(self.car_sales_df)
+        self.car_sales_df["VehicleType"].replace("Saloon", "Sedan", inplace=True)
+        self.car_sales_single_values = self.data_cleaner.remove_single_value_columns(self.car_sales_df)
+        print("\nData Cleaned!", f"Single value column{'s'[:len(self.car_sales_single_values)^1]} removed: {self.car_sales_single_values}" if self.car_sales_single_values else "", DASH_SEPARATOR)
+    
+    ## Pre-Cleaning Data Exploration
+    def sort_by_column(self, column_name):
+        return self.car_sales_df.sort_values(by=[column_name])
+    
+    def sort_by_purchase_date(self):
+        return self.sort_by_column("PurchaseDate")
+    
+    ## Post-Cleaning Data Exploration
     def print_data(self): print(f"Car Sales Table!{DASH_SEPARATOR}\n{self.car_sales_df}")
     
     def print_data_snippet(self):
@@ -22,20 +37,48 @@ class CarSales():
     def print_data_types(self): 
         print(f"\nData Types of Car Sales Table!{DASH_SEPARATOR}\n")
         self.car_sales_df.info()
+    
+    def get_non_id_columns(self):
+        return [column for column in self.car_sales_df.columns if "ID" not in str(column)]
+    
+    def get_aggregate_color_id(self):
+        column = "ColorID"
+        return [{column: [
+            {"min": self.car_sales_df.groupby([column])[self.get_non_id_columns()].min(numeric_only=True)},
+            {"max": self.car_sales_df.groupby([column])[self.get_non_id_columns()].max(numeric_only=True)},
+            {"mean": self.car_sales_df.groupby([column])[self.get_non_id_columns()].mean(numeric_only=True)},
+            {"median": self.car_sales_df.groupby([column])[self.get_non_id_columns()].median(numeric_only=True)},
+            {"mode": self.car_sales_df.groupby([column])[self.get_non_id_columns()].agg(lambda x: x.value_counts().index[0])},
+            {"sum": self.car_sales_df.groupby([column])[self.get_non_id_columns()].sum(numeric_only=True)},
+            ]}]
+    
+    def get_df_without_id_columns(self):
+        id_columns = [column for column in self.car_sales_df.columns if "ID" in str(column)]
+        return self.car_sales_df.drop(columns=id_columns)
+      
+    def get_aggregate_non_int_columns(self):
+        car_sales_df_no_id = self.get_df_without_id_columns()
         
-    def clean_data(self):
-        self.data_cleaner.drop_null_rows(self.car_sales_df, ["CostPrice"])
-        self.data_cleaner.convert_columns_to_date(self.car_sales_df)
-        self.car_sales_df["VehicleType"].replace("Saloon", "Sedan", inplace=True)
-        self.car_sales_single_values = self.data_cleaner.remove_single_value_columns(self.car_sales_df)
-        print("\nData Cleaned!", f"Single value column{'s'[:len(self.car_sales_single_values)^1]} removed: {self.car_sales_single_values}" if self.car_sales_single_values else "", DASH_SEPARATOR)
+        return [{column: [
+            {"min": car_sales_df_no_id.groupby([column]).min(numeric_only=True)},
+            {"max": car_sales_df_no_id.groupby([column]).max(numeric_only=True)},
+            {"mean": car_sales_df_no_id.groupby([column]).mean(numeric_only=True)},
+            {"median": car_sales_df_no_id.groupby([column]).median(numeric_only=True)},
+            {"mode": car_sales_df_no_id.groupby([column]).agg(lambda x: x.value_counts().index[0])},
+            {"sum": car_sales_df_no_id.groupby([column]).sum(numeric_only=True)},
+            ]} for column in car_sales_df_no_id.columns if car_sales_df_no_id[column].dtype not in NUMERICAL_DTYPES]
     
-    def sort_by_column(self, column_name):
-        return self.car_sales_df.sort_values(by=[column_name])
-    
-    def sort_by_purchase_date(self):
-        return self.sort_by_column("PurchaseDate")
-       
+    ## Query Helper Methods
+    def combine_cost_columns(self):
+        cost_columns = [column for column in self.car_sales_df.columns if self.car_sales_df[column].dtype in NUMERICAL_DTYPES and "ID" not in str(column) and "Mileage" not in str(column)]
+        car_sales_df_copy = self.car_sales_df.copy()
+        car_sales_df_copy.drop(columns=cost_columns, inplace=True)
+        car_sales_df_copy["Cost"] = 0
+        for column in cost_columns:
+            car_sales_df_copy["Cost"] += self.car_sales_df[column]
+        return car_sales_df_copy
+     
+    ## Queries
     def get_min_values(self):
         return [{column: self.car_sales_df[column].min()} for column in self.car_sales_df.columns if self.car_sales_df[column].dtype in NUMERICAL_DTYPES and "ID" not in str(column)]
         
@@ -65,50 +108,6 @@ class CarSales():
     def most_common_color_per_category(self, category):
         car_sales_vehicle_type_color_count = self.car_sales_df.groupby([category,"ColorID"]).size().sort_values(ascending=False).reset_index(name="count").drop_duplicates(subset=category)
         return dict(zip(car_sales_vehicle_type_color_count[category], car_sales_vehicle_type_color_count["ColorID"]))
-    
-    def get_cost_columns(self):
-        return [column for column in self.car_sales_df.columns if self.car_sales_df[column].dtype in NUMERICAL_DTYPES and "ID" not in str(column) and "Mileage" not in str(column)]
-    
-    def get_non_id_columns(self):
-        return [column for column in self.car_sales_df.columns if "ID" not in str(column)]
-    
-    def get_df_without_id_columns(self):
-        id_columns = [column for column in self.car_sales_df.columns if "ID" in str(column)]
-        return self.car_sales_df.drop(columns=id_columns)
-    
-    def get_aggregate_color_id(self):
-        column = "ColorID"
-        return [{column: [
-            {"min": self.car_sales_df.groupby([column])[self.get_non_id_columns()].min(numeric_only=True)},
-            {"max": self.car_sales_df.groupby([column])[self.get_non_id_columns()].max(numeric_only=True)},
-            {"mean": self.car_sales_df.groupby([column])[self.get_non_id_columns()].mean(numeric_only=True)},
-            {"median": self.car_sales_df.groupby([column])[self.get_non_id_columns()].median(numeric_only=True)},
-            {"mode": self.car_sales_df.groupby([column])[self.get_non_id_columns()].agg(lambda x: x.value_counts().index[0])},
-            {"sum": self.car_sales_df.groupby([column])[self.get_non_id_columns()].sum(numeric_only=True)},
-            ]}]
-      
-    def get_aggregate_non_int_columns(self):
-        car_sales_df_no_id = self.get_df_without_id_columns()
-        
-        return [{column: [
-            {"min": car_sales_df_no_id.groupby([column]).min(numeric_only=True)},
-            {"max": car_sales_df_no_id.groupby([column]).max(numeric_only=True)},
-            {"mean": car_sales_df_no_id.groupby([column]).mean(numeric_only=True)},
-            {"median": car_sales_df_no_id.groupby([column]).median(numeric_only=True)},
-            {"mode": car_sales_df_no_id.groupby([column]).agg(lambda x: x.value_counts().index[0])},
-            {"sum": car_sales_df_no_id.groupby([column]).sum(numeric_only=True)},
-            ]} for column in car_sales_df_no_id.columns if car_sales_df_no_id[column].dtype not in NUMERICAL_DTYPES]
-        
-    def get_boolean_values(self): pass
-    
-    def combine_cost_columns(self):
-        cost_columns = self.get_cost_columns()
-        car_sales_df_copy = self.car_sales_df.copy()
-        car_sales_df_copy.drop(columns=cost_columns, inplace=True)
-        car_sales_df_copy["Cost"] = 0
-        for column in cost_columns:
-            car_sales_df_copy["Cost"] += self.car_sales_df[column]
-        return car_sales_df_copy
     
     def min_cost_and_min_mileage(self, cost_of_car, mileage_of_car):
         car_sales_df_cost = self.combine_cost_columns()

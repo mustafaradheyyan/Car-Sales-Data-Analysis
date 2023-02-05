@@ -43,5 +43,3 @@ def main():
     
 if __name__ == "__main__":
     main()
-    
-    # car_sales.get_boolean_values()
