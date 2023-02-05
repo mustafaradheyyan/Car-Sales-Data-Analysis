@@ -23,7 +23,7 @@ class CarSales():
     
     @property
     def car_sales_df(self):
-        return copy.deepcopy(self._car_sales_df)
+        return self._car_sales_df
     
     @property
     def car_sales_columns_list(self):
